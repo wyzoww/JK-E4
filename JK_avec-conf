@@ -1,39 +1,68 @@
-pipeline {
-agent any
-parameters {
-string(name: 'NAME', description: 'Please tell me your name')
-choice(name: 'GENDER', choices: ['Male', 'Female'], description: 'Choose Gender')
-}
-stages {
-    stage('Printing name') {
-        steps {
-            script {
-                def name = "${params.NAME}"
-                def gender = "${params.GENDER}"
-                if(gender == "Male") {
-                echo "Mr. $name"
-                        }
-                else {
-                echo "Mrs. $name"
-                }
-            }
-        }
+import java.util.ArrayList;
+import java.util.List;
+
+class Story {
+    private String description;
+
+    public Story(String description) {
+        this.description = description;
     }
-   
-    stage('BUILD') {
-            steps {
-                echo 'Developpement'
-            }
+
+    @Override
+    public String toString() {
+        return description;
+    }
+}
+
+class Epic {
+    private String title;
+    private List<Story> stories;
+
+    public Epic(String title) {
+        this.title = title;
+        this.stories = new ArrayList<>();
+    }
+
+    public void addStory(Story story) {
+        stories.add(story);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder(title + ":\n");
+        for (Story story : stories) {
+            result.append(" - ").append(story).append("\n");
         }
-        stage('Test') {
-            steps {
-                echo 'Testing'
-            }
-        }
-        stage('DEPLOY') {
-            steps {
-                echo 'Mise en Production'
-            }
-        }
+        return result.toString();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Epic for ticket purchasing
+        Epic ticketEpic = new Epic("Epic : lancement - mars 2050");
+
+        Story story1 = new Story("Mettre à jour la plage de dates pour inclure les dates du lancement de mars 2050.");
+        Story story2 = new Story("Réduire le temps de chargement des listes de vols demandées à < 0,45 seconde.");
+        Story story3 = new Story("Promouvoir les soldes d'été pour Saturne sur la page de confirmation des réservations en première classe.");
+
+        ticketEpic.addStory(story1);
+        ticketEpic.addStory(story2);
+        ticketEpic.addStory(story3);
+
+        // Epic for propulsion team
+        Epic propulsionEpic = new Epic("Epic : lancement - mars 2050");
+
+        Story story4 = new Story("Maintenir la concentration des réservoirs de carburant à plus de 250 PPM au lancement.");
+        Story story5 = new Story("Réduire la consommation globale de carburant de 1%.");
+        Story story6 = new Story("Embaucher un nouvel ingénieur en propulsion pour remplacer Gary. #garygate2050");
+
+        propulsionEpic.addStory(story4);
+        propulsionEpic.addStory(story5);
+        propulsionEpic.addStory(story6);
+
+        // Print the epics and their stories
+        System.out.println(ticketEpic);
+        System.out.println(propulsionEpic);
     }
 }
